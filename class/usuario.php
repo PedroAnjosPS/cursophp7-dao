@@ -41,12 +41,7 @@
             ));
 
             if(count($resultado[0]) > 0){
-                $row = $resultado[0];
-
-                $this->setId($row['idusuario']);
-                $this->setLogin($row['deslogin']);
-                $this->setSenha($row['dessenha']);
-                $this-> setCad(new DateTime($row['dtcadastro']));
+                $this->setData($resultado[0]);
             }
         }
 
@@ -72,15 +67,49 @@
             ));
 
             if(count($resultado[0]) > 0){
-                $row = $resultado[0];
-
-                $this->setId($row['idusuario']);
-                $this->setLogin($row['deslogin']);
-                $this->setSenha($row['dessenha']);
-                $this-> setCad(new DateTime($row['dtcadastro']));
+                $this->setData($resultado[0]);
             } else {
                 throw new Exception("Login e/ou senha inválidos.");
             }
+        }
+
+        public function setData($data){
+            $this->setId($data['idusuario']);
+            $this->setLogin($data['deslogin']);
+            $this->setSenha($data['dessenha']);
+            $this-> setCad(new DateTime($data['dtcadastro']));
+        }
+
+        public function __construct($login = "", $senha = ""){
+             $this->setLogin($login);
+             $this->setSenha($senha);
+        }
+
+        public function insert(){
+            $sql = new Sql();
+
+            $results = $sql->select("CALL sp_usuarios_insert(:LOGIN, :PASSWORD)", array(
+                ':LOGIN' => $this->getLogin(),
+                ':PASSWORD' => $this->getSenha()
+            ));
+
+            if(count($results) > 0){
+                $this->setData($results[0]);            
+            }
+        }
+
+        public function update($login, $senha){
+            $this->setLogin($login);
+            $this->setSenha($senha);
+            
+            $sql = new Sql();
+
+            $sql->queri("UPDATE tb_usuarios SET deslogin = :LOGIN, dessenha = :SENHA
+            WHERE idusuario = :ID", array(
+                ":LOGIN" => $this->getLogin(),
+                ":SENHA" => $this->getSenha(),
+                ":ID" => $this->getId()
+            ));
         }
 
         public function __toString(){

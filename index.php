@@ -36,12 +36,19 @@
     $aluno->insert();
 
     echo $aluno;*/
-
-    $usuario = new Usuario();
+    //Fazendo update de um usuario
+    /*$usuario = new Usuario();
 
     $usuario->loadById(8);
 
     $usuario->update("professor", "pR0f&$$0r");
+
+    echo $usuario;*/
+
+    //Deletando um usuario
+    $usuario = new Usuario();
+
+    $usuario->delete(10);
 
     echo $usuario;
 ?>
